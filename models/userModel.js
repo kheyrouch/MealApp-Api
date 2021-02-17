@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     },
     phoneNumber: {
         type: String,
-        minlength: 8,
+        length: 10,
         required: [true, 'please add a phone number'],
         match: [
             /^(00213|\+213|0)(5|6|7)[0-9]{8}$/,
@@ -27,12 +27,13 @@ const userSchema = new mongoose.Schema({
     },
     address: {
         type: String,
+        minlength: 5,
         required: [true, 'please add an adresse']
     },
     password: {
         type: String,
         required: [true, 'please add password'],
-        minlength: 8,
+        minlength: 5,
         select: false
     }
 })
