@@ -4,7 +4,10 @@ const mongoose = require('mongoose');
 
 
 //import middlewares
-const middlewares = require('./middlewares/middleware');
+const middlewares = require('./middleware');
+
+//import Error class
+const BaseError = require('./errors/ErrorsClass');
 
 // dotenv configuration 
 dotenv.config({ path: `${__dirname}/config/config.env`});
@@ -17,22 +20,33 @@ const app = express();
 
 //add third party middlewares
 app.use(...middlewares);
-// // connect to the database
-// mongoose.connect(`${process.env.MONGODB_URI}`,{
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//     useCreateIndex: true
 
+// //error Handling 
+// app.use((err, req, res, next) => {
+//     const { message, code } = err;
+//     if ( err instanceof BaseError ) {
+//         res.status(code).json({
+//             success: false,
+//             err: message
+//         })
+//     }
 // })
-//     .then(        //Lunching the server
-//         app.listen(PORT, function (){
-//             console.log(`app listening on port ${PORT}`);
-//         }))
-//     .catch( err => console.error(err) );
 
-app.listen(PORT, function (){
-    console.log(`app listening on port ${PORT}`);
-})
+// connect to the database
+mongoose.connect(`${process.env.MONGODB_URI}`,{
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+
+},(err) => {
+    if(err) console.error(err) 
+    else {
+        app.listen(PORT, function (){
+            console.log(`app listening on port ${PORT}`);
+        })
+    }
+});
+
 
 app.get('/', (req,res)=>{
     res.send("ok");
