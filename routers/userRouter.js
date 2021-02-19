@@ -1,19 +1,28 @@
 const express = require('express');
-const { body, validationResult } = require('express-validator');
 const userRouter = express.Router()
 
 const {
-    postUserValidator,
-    postUserValidatorRole
-} = require('../middlewares/userValidators')
+    postUserValidatorRole,
+    deleteUserValidatorRole,
+    loginValidatorRole,
+    errorValidator,
+    patchValidatorRole
+} = require('../middlewares/userValidators');
+
+const {
+    createUser,
+    deleteUser,
+    login,
+    modifieUser
+} = require('../controllers/userController'); 
 
 userRouter
     .route('/user')
-    .post(postUserValidatorRole(), postUserValidator, (req, res) => {
-        res.json({
-            succuss: true
-        })
-    })
+        .post(postUserValidatorRole(), errorValidator, createUser)
+        .delete(deleteUserValidatorRole(), errorValidator, deleteUser)
+        .patch(patchValidatorRole(), errorValidator, modifieUser)
+userRouter
+    .route('/user/login').post(loginValidatorRole(), errorValidator, login);
 
 module.exports = userRouter;
 
