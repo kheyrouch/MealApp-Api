@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
             'please add a valid phone number'
         ]
     },
-    address: {
+    adresse: {
         type: String,
         minlength: 5,
         required: [true, 'please add an adresse']
@@ -45,5 +45,9 @@ userSchema.pre('save', async function(next){
     this.password = await bcrypt.hash(this.password, salt);
     next();
 })
+
+userSchema.methods.verifyPassword = async function verifyPassword(password){
+    return await bcrypt.compare(password, this.password);
+}
 
 module.exports = mongoose.model('User', userSchema);
