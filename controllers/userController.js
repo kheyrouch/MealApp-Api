@@ -144,9 +144,6 @@ exports.login = async (req, res, next) => {
         )
     }
 
-    console.log(password);
-    console.log(user);
-
     try {
         const result = await user.verifyPassword(password);
         console.log(result);
@@ -156,7 +153,7 @@ exports.login = async (req, res, next) => {
                 new BaseError("wrong password", 403)
             )
         )
-    }
+        }
     } catch (error) {
         console.log(error);
         return(
@@ -173,6 +170,35 @@ exports.login = async (req, res, next) => {
     })
 
 
+}
+
+exports.getUserById = async (req, res, next) => {
+    const id = req.params.id;
+    const { token } = req.body
+    const user = await User.findById(id);
+
+    if(!verifyToken(token)) {
+        return(
+            next(
+                new BaseError("you must login", 403)
+            )
+        )
+    }
+
+    if(!user){
+        return(
+            next(
+                new BaseError("User doesn't exist", 404)
+            )
+        )
+    }
+
+    res.status(200).json({
+        success: true,
+        data: user
+    })
+
+    
 }
 
 

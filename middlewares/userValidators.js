@@ -63,6 +63,13 @@ exports.patchValidatorRole = () => {
         body('token').isJWT().withMessage('insert a valid token')
     ]
 }
+
+exports.getUserValidatorRole = () => {
+    return [
+        body('token').isJWT().withMessage('invalid token')
+    ]
+}
+
 exports.errorValidator = (req, res, next) => {
     const errors = validationResult(req);
 
